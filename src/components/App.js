@@ -16,12 +16,13 @@ class App extends React.Component {
     };
   }
 
-   componentDidMount() {
+  componentDidMount() {
     let comments = localStorage.getItem("data");
     comments = JSON.parse(comments);
-    console.log(comments);
 
-    this.setState({ comments });
+    if (comments !== null) {
+      this.setState({ comments });
+    }
   }
 
   local() {
@@ -116,14 +117,16 @@ class App extends React.Component {
       comments.push({
         author: this.state.newAuthor,
         dateComment: new Date().toLocaleString(),
-        commentText: this.state.newCommentText
+        commentText: this.state.newCommentText,
+        edit: false
       });
 
       this.setState({
         comments,
         add: true,
         newAuthor: "",
-        newCommentText: ""
+        newCommentText: "",
+        edit: false
       });
 
       this.local();
@@ -142,27 +145,29 @@ class App extends React.Component {
     return (
       <div className="comments">
         <ul className="comments__list">
-          {this.state.comments.map((item, i) =>
-            !item.edit ? (
-              <CommentsList
-                key={i + item.dateComment}
-                author={item.author}
-                commentText={item.commentText}
-                dateComment={item.dateComment}
-                editComment={this.editComment.bind(this, i)}
-                deleteComment={this.deleteComment.bind(this, i)}
-              />
-            ) : (
-              <Edit
-                author={item.author}
-                commentText={item.commentText}
-                dateComment={item.dateComment}
-                cancelEdit={this.cancelEdit.bind(this, i)}
-                saveEdit={this.saveEdit.bind(this, i)}
-                editText={this.editText.bind(this)}
-              />
-            )
-          )}
+          {this.state.comments !== null
+            ? this.state.comments.map((item, i) =>
+                !item.edit ? (
+                  <CommentsList
+                    key={i + item.dateComment}
+                    author={item.author}
+                    commentText={item.commentText}
+                    dateComment={item.dateComment}
+                    editComment={this.editComment.bind(this, i)}
+                    deleteComment={this.deleteComment.bind(this, i)}
+                  />
+                ) : (
+                  <Edit
+                    author={item.author}
+                    commentText={item.commentText}
+                    dateComment={item.dateComment}
+                    cancelEdit={this.cancelEdit.bind(this, i)}
+                    saveEdit={this.saveEdit.bind(this, i)}
+                    editText={this.editText.bind(this)}
+                  />
+                )
+              )
+            : null}
         </ul>
         {this.state.add ? (
           <Comments addComment={this.addComment.bind(this)} />
