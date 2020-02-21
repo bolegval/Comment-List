@@ -31,11 +31,12 @@ class App extends React.Component {
   }
 
   deleteComment(key) {
-    this.setState({
-      comments: this.state.comments.filter((item, i) => i !== key)
-    });
-
-    this.local();
+    this.setState(
+      (this.state = {
+        comments: this.state.comments.filter((item, i) => i !== key)
+      }),
+      this.local()
+    );
   }
 
   editComment(key) {
@@ -78,7 +79,7 @@ class App extends React.Component {
       }
     });
 
-    this.setState({ comments, value: "" });
+    this.setState((this.state = { comments, value: "" }), this.local());
   }
 
   cancelEdit(key) {
